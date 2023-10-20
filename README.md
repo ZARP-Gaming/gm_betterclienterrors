@@ -17,5 +17,18 @@ We also use [SourceSDK2013][2]. The links to [SourceSDK2013][2] point to my own 
 
 If you plan to compile this for x64, make sure to download the correct branch from the garrysmod_common repository.
 
-  [1]: https://github.com/danielga/garrysmod_common
-  [2]: https://github.com/danielga/sourcesdk-minimal
+[1]: https://github.com/danielga/garrysmod_common
+[2]: https://github.com/danielga/sourcesdk-minimal
+
+# Installation
+Once compiled, copy the dll to `lua/bin`, and add this to any serverside file.
+Make sure you have compiled the correct release for your servers architecture, i.e x32/x64
+
+```lua
+hook.Add("PostGamemodeLoaded", "LoadBetterClientErrors", function()
+	if file.Exists("lua/bin/gmsv_betterclienterrors_win32.dll", "GAME") or file.Exists("lua/bin/gmsv_betterclienterrors_win64.dll", "GAME") then
+		require("betterclienterrors")
+		print("Loaded successfully")
+	end
+end)
+```

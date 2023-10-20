@@ -14,13 +14,24 @@ namespace server
 
 	static void HandleClientLuaError_d(CBasePlayer *player, const char *error)
 	{
-		std::stringstream ss;
-		std::time_t t = std::time(nullptr);
-		auto tm = *std::localtime(&t);
+		try
+		{
+			std::stringstream ss;
+			std::time_t t = std::time(nullptr);
+			auto tm = *std::localtime(&t);
 
-		ss << "[" << (tm.tm_mday) << "/" << (tm.tm_mon + 1) << "/" << (tm.tm_year + 1900) << " " << tm.tm_hour << ":" << tm.tm_min << ":" << tm.tm_sec << "] " << error;
+			ss << "[" << (tm.tm_mday) << "/" << (tm.tm_mon + 1) << "/" << (tm.tm_year + 1900) << " " << tm.tm_hour << ":" << tm.tm_min << ":" << tm.tm_sec << "] " << error;
 
-		HandleClientLuaError_detour.GetTrampoline<HandleClientLuaError_t>()(player, ss.str().c_str());
+			HandleClientLuaError_detour.GetTrampoline<HandleClientLuaError_t>()(player, ss.str().c_str());
+		}
+		catch (const std::exception &e)
+		{
+			printf("Better Client Errors - Detour Exception thrown: %s\n", e.what());
+		}
+		catch (...)
+		{
+			printf("Better Client Errors - Detour Unknown exception thrown!\n");
+		}
 	}
 
 	void Initialize()
@@ -45,7 +56,7 @@ GMOD_MODULE_OPEN()
 	}
 	catch (const std::exception &e)
 	{
-		printf("Better Client Errors - Exception thrown: %s\n", e.what());
+		printf("Better Client Errors - Initialize Exception thrown: %s\n", e.what());
 	}
 	return 0;
 }

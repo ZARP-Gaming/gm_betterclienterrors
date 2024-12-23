@@ -46,6 +46,11 @@ namespace server
 		HandleClientLuaError_detour.Create(Detouring::Hook::Target(reinterpret_cast<void *>(HandleClientLuaError)), reinterpret_cast<void *>(&HandleClientLuaError_d));
 		HandleClientLuaError_detour.Enable();
 	}
+
+	void Deinitialize() {
+		HandleClientLuaError_detour.Disable();
+		HandleClientLuaError_detour.Destroy();
+	}
 }
 
 GMOD_MODULE_OPEN()
@@ -63,5 +68,6 @@ GMOD_MODULE_OPEN()
 
 GMOD_MODULE_CLOSE()
 {
+	server::Deinitialize();
 	return 0;
 }
